@@ -11,6 +11,10 @@ import ipdb
 # Create your views here.
 from sumgame.models import CommunityMember, Hobby
 
+def get_number_list_from_stringified_list(stringified_list):
+    return [int(number) for number in stringified_list[1:-1].split(',')]
+
+
 def hobby_riddle(request):
     print(f"AAA riddle man: {request.GET.get('riddle_man_id')}")
     riddle_man = CommunityMember.objects.get(id=int(request.GET.get('riddle_man_id')))
@@ -19,9 +23,27 @@ def hobby_riddle(request):
     # ipdb.set_trace()
 
     if int(request.GET.get('answer')) in [hobby.id for hobby in riddle_man.hobbies.all()]: # riddle_man.hobbies
+        print(f"AAA current_user.given_numbers before: {current_user.given_numbers}")
+        # ipdb.set_trace()
+        current_user_numbers_list = get_number_list_from_stringified_list(current_user.given_numbers)
+        # ipdb.set_trace()
+        current_user_numbers_set = set(current_user_numbers_list)
+        current_user_numbers_set.add(riddle_man.master_number)
 
-        return HttpResponse(f"you're right!")
-        request.user
+        current_user_numbers_list = list(current_user_numbers_set)
+        # current_user_numbers_list.append(riddle_man.master_number)
+        current_user.given_numbers = current_user_numbers_list
+        current_user.save()
+
+        # current_user.given_numbers[] (riddle_man.master_number)
+        print(f"AAA current_user.given_numbers after: {current_user.given_numbers}")
+        return HttpResponse(
+            f"you're right! you earned the number {riddle_man.master_number} from {riddle_man.username} <br>"
+            f"your numbers: {current_user.given_numbers}<br>"
+            f'<a href="javascript:history.back()">Go Back</a>'
+                            )
+
+
     else:
         return HttpResponse(f"this hobby is not written as the riddle man hobby")
 
@@ -47,7 +69,10 @@ def index(request):
 
         print(f"AAA community_member.master_number_generation_date: {community_member.master_number_generation_date}")
         riddle_man = CommunityMember.objects.all()[1]
-        return HttpResponse(f"Welcome {community_member.username} :-). <br>"
+        return HttpResponse(f'<head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"></head>'
+                            f"<body>"
+                            f'<p     style="padding: 25px">'
+                            f"Welcome {community_member.username} :-). <br>"
                             f"you're at the game index. <br>"
                             f"your hobbies are: {[h.name for h in community_member.hobbies.all()]} <br>"
                             f"your master number for today is {community_member.master_number} <br>"
@@ -60,9 +85,11 @@ def index(request):
                             f'<li><a href="hobby_riddle?riddle_man_id={riddle_man.id}&answer={Hobby.objects.all()[1].id}">{Hobby.objects.all()[1]}</a></li>'
                             f'<li><a href="hobby_riddle?riddle_man_id={riddle_man.id}&answer={Hobby.objects.all()[2].id}">{Hobby.objects.all()[2]}</a></li>'
                             f'<li><a href="hobby_riddle?riddle_man_id={riddle_man.id}&answer={Hobby.objects.all()[3].id}">{Hobby.objects.all()[3]}</a></li></ul>'
-                            f"<button>share your tasks and tasks progress! </button>"
-                            f"your friend <friend> just finished task. clap him! | arrange a tizmoret 'kol hakavod' | else"
-                            f"ubuntu level: 12")
+                            f"<button>share your tasks and tasks progress! </button><br>"
+                            f"your friend <friend> just finished task. clap him! | arrange a tizmoret 'kol hakavod' | else <br>"
+                            f"ubuntu level: 12"
+                            f'</p>'
+                            f"</body>")
 
     except Exception as e:
         print(f"AAA exception: {e}")
