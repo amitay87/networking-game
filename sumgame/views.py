@@ -64,7 +64,7 @@ class HomePageView(TemplateView):
 
         try:
             community_member = CommunityMember.objects.get(id=self.request.user.id)
-            community_member_hobbies = [h.name for h in community_member.hobbies.all()]
+            current_user_hobbies = [h.name for h in community_member.hobbies.all()]
             context['community_member'] = community_member
             context['all_hobbies'] = [h.name for h in community_member.hobbies.all()]
 
@@ -81,14 +81,21 @@ class HomePageView(TemplateView):
             riddle_man = CommunityMember.objects.all()[1]
             context['riddle_man'] = riddle_man
 
-            context['all_hobbies'] = [ho for ho in Hobby.objects.all()]
+            all_hobbies = [ho for ho in Hobby.objects.all()]
+            context['all_hobbies'] = all_hobbies
+            random.shuffle(all_hobbies)
+            hobbies_choices = all_hobbies[0:4]
+            hobby_choices_set = set(hobbies_choices)
+            current_user_hobbies_set = set(current_user_hobbies)
+            if current_user_hobbies_set.intersection(hobby_choices_set) == ():
+                random.shuffle(current_user_hobbies)
+                hobbies_choices[0] = current_user_hobbies[0]
+
 
             # ipdb.set_trace()
             context['today'] = str(datetime.date.today())
-            # context['all_hobbies'] = list(Hobby.objects.all())
-            # context['Hobby'] = Hobby
+            context['hobbies_choices'] = hobbies_choices
 
-            # return TemplateResponse(request, 'app/index.html')
 
         except Exception as e:
             print(f"AAA exception: {e}")

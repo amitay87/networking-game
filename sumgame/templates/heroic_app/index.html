@@ -141,7 +141,7 @@
 
 
                                             <ul class="list-group">
-                                                {% for hobby in all_hobbies %}
+                                                {% for hobby in hobbies_choices %}
                                                 <li class="list-group-item"><a href="hobby_riddle?riddle_man_id={{riddle_man.id}}&answer={{hobby.id}}">{{hobby}}</a>
                                             </li>
                                                 {% endfor %}
