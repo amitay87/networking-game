@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
+from django.core.validators import int_list_validator
 from django.db import models
 from phone_field import PhoneField
 
@@ -27,7 +28,7 @@ class CommunityMember(User):
     master_number = models.IntegerField(blank=True, null=True, default=None)
     master_number_generation_date = models.DateField(blank=True, null=True, default=None)
     friends = models.ManyToManyField('self', null=True, default=None)
-    given_numbers = ArrayField(models.IntegerField(blank=True, null=True, default=None), size=100, null=True, default=None) # models.IntegerField(blank=True, default=0)
+    given_numbers = models.CharField(validators=[int_list_validator], max_length=200, default='[]') # models.IntegerField(blank=True, default=0)
     def get_community_member_object(self): # TODO: consider refactoring to casting
         return
 
