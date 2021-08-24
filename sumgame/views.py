@@ -66,7 +66,8 @@ class HomePageView(TemplateView):
             community_member = CommunityMember.objects.get(id=self.request.user.id)
             community_member_hobbies = [h.name for h in community_member.hobbies.all()]
             context['community_member'] = community_member
-            context['hobbies'] = [h.name for h in community_member.hobbies.all()]
+            context['all_hobbies'] = [h.name for h in community_member.hobbies.all()]
+
 
             if community_member.master_number_generation_date != datetime.datetime.now().date() or community_member.master_number is None:
                 # CommunityMember.objects.filter(username=request.user.username).update(master_number=random.randint(1, 17))
@@ -78,6 +79,15 @@ class HomePageView(TemplateView):
             print(
                 f"AAA community_member.master_number_generation_date: {community_member.master_number_generation_date}")
             riddle_man = CommunityMember.objects.all()[1]
+            context['riddle_man'] = riddle_man
+
+            context['all_hobbies'] = [ho for ho in Hobby.objects.all()]
+
+            # ipdb.set_trace()
+            context['today'] = str(datetime.date.today())
+            # context['all_hobbies'] = list(Hobby.objects.all())
+            # context['Hobby'] = Hobby
+
             # return TemplateResponse(request, 'app/index.html')
 
         except Exception as e:
