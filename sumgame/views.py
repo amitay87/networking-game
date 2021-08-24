@@ -60,9 +60,10 @@ class HomePageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['my_message'] = 'Hello from Amitay'
 
-        messages.info(self.request, "hello http://example.com")
+        messages.info(self.request, "hello http://example2.com")
 
         try:
+            print(f"AAA user: {self.request.user}")
             community_member = CommunityMember.objects.get(id=self.request.user.id)
             current_user_hobbies = [h.name for h in community_member.hobbies.all()]
             context['community_member'] = community_member
@@ -78,7 +79,7 @@ class HomePageView(TemplateView):
 
             print(
                 f"AAA community_member.master_number_generation_date: {community_member.master_number_generation_date}")
-            riddle_man = CommunityMember.objects.all()[1]
+            riddle_man = random.choice(CommunityMember.objects.all())
             context['riddle_man'] = riddle_man
 
             all_hobbies = [ho for ho in Hobby.objects.all()]
@@ -100,7 +101,7 @@ class HomePageView(TemplateView):
         except Exception as e:
             print(f"AAA exception: {e}")
             if str(e) == "CommunityMember matching query does not exist.":
-                return redirect('login')
+                return context # redirect('login')
             # else:
             #     return return_value
             # return HttpResponse("redirecting to login page...")
@@ -134,4 +135,4 @@ def index(request):
         # return HttpResponse("redirecting to login page...")
 
 def login(request):
-    return HttpResponse("Welcome to login page")
+    return redirect('login') # HttpResponse("Welcome to login page")
