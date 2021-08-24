@@ -1,0 +1,31 @@
+{% extends 'app/base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Jobhub "Sum It Up" game! 🚀{% endblock %}
+
+{% block content %}
+<!--    This is <em>bootstrap4</em> for <strong>Django</strong>.-->
+<!--    {{my_message}}-->
+
+<!--            <head><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"></head>-->
+<!--            <body>-->
+            <p     style="padding: 25px">
+            Welcome {{community_member.username}} 👋  <br>
+            you're at the game index. <br>
+            your hobbies are: {{hobbies}} <br>
+            your master number for today is {community_member.master_number} <br>
+            numbers you earned today: {community_member.given_numbers}<br>
+            sum of all of your numbers = {community_member.master_number + sum(map(int, str.split(community_member.given_numbers[1:-1], ',')))}<br>
+            your community have 0 out of 100 points. (100 points will reward you with group prize <br>
+            list of community members: {[c.username for c in CommunityMember.objects.all()]}<br>
+            which of the following are hobbies of {riddle_man}? <br>
+            <ul><li><a href="hobby_riddle?riddle_man_id={riddle_man.id}&answer={Hobby.objects.all()[0].id}">{Hobby.objects.all()[0]}</a></li>
+            <li><a href="hobby_riddle?riddle_man_id={riddle_man.id}&answer={Hobby.objects.all()[1].id}">{Hobby.objects.all()[1]}</a></li>
+            <li><a href="hobby_riddle?riddle_man_id={riddle_man.id}&answer={Hobby.objects.all()[2].id}">{Hobby.objects.all()[2]}</a></li>
+            <li><a href="hobby_riddle?riddle_man_id={riddle_man.id}&answer={Hobby.objects.all()[3].id}">{Hobby.objects.all()[3]}</a></li></ul>
+            <button>share your tasks and tasks progress! </button><br>
+            your friend *friend* just finished task. clap him! | arrange a tizmoret 'kol hakavod' | else <br>
+            ubuntu level: 12
+            </p>
+<!--            </body>-->
+{% endblock %}

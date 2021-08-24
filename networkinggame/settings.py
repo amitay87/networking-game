@@ -34,6 +34,7 @@ LOGIN_REDIRECT_URL = '/sumgame'
 INSTALLED_APPS = [
     'sumgame',
     'phone_field',
+    'bootstrap4',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
