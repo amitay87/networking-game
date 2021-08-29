@@ -1,2 +1,2 @@
 # networking-game
-Games that encourages networking in open workspaces (such as WeWork)
+Games that encourage networking in open workspaces (such as WeWork)
