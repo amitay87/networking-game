@@ -13,7 +13,8 @@ import ipdb
 from django.template.response import TemplateResponse
 from django.views.generic import TemplateView
 
-from sumgame.models import CommunityMember, Hobby
+from sumgame.models import Hobby, UserExtendedInfo
+
 
 def get_number_list_from_stringified_list(stringified_list):
     return [int(number) for number in stringified_list[1:-1].split(',')]
@@ -21,8 +22,8 @@ def get_number_list_from_stringified_list(stringified_list):
 
 def hobby_riddle(request):
     print(f"AAA riddle man: {request.GET.get('riddle_man_id')}")
-    riddle_man = CommunityMember.objects.get(id=int(request.GET.get('riddle_man_id')))
-    current_user = CommunityMember.objects.get(id=request.user.id)
+    riddle_man = User.objects.get(id=int(request.GET.get('riddle_man_id')))
+    current_user = User.objects.get(id=request.user.id)
 
     # ipdb.set_trace()
 
@@ -57,6 +58,7 @@ class HomePageView(TemplateView):
     template_name = "heroic_app/index.html"
 
     def get_context_data(self, **kwargs):
+        print("AAA in get_context_data()")
         context = super().get_context_data(**kwargs)
         context['my_message'] = 'Hello from Amitay'
 
@@ -64,22 +66,25 @@ class HomePageView(TemplateView):
 
         try:
             print(f"AAA user: {self.request.user}")
-            community_member = CommunityMember.objects.get(id=self.request.user.id)
-            current_user_hobbies = [h.name for h in community_member.hobbies.all()]
-            context['community_member'] = community_member
-            context['all_hobbies'] = [h.name for h in community_member.hobbies.all()]
+            ipdb.set_trace()
+            user = User.objects.get(id=self.request.user.id)
+
+            context['community_member'] = user
+            user_extended_info = UserExtendedInfo.objects.filter(user=user)
+            current_user_hobbies = [h.name for h in user_extended_info.hobbies.all()]
+            context['all_hobbies'] = [h.name for h in Hobby.object.all()]
 
 
-            if community_member.master_number_generation_date != datetime.datetime.now().date() or community_member.master_number is None:
+            if user_extended_info.master_number_generation_date != datetime.datetime.now().date() or user_extended_info.master_number is None:
                 # CommunityMember.objects.filter(username=request.user.username).update(master_number=random.randint(1, 17))
-                community_member.master_number = random.randint(1, 17)
-                community_member.master_number_generation_date = datetime.date.today()
-                community_member.save()
+                user_extended_info.master_number = random.randint(1, 17)
+                user_extended_info.master_number_generation_date = datetime.date.today()
+                user_extended_info.save()
 
 
             print(
-                f"AAA community_member.master_number_generation_date: {community_member.master_number_generation_date}")
-            riddle_man = random.choice(CommunityMember.objects.all())
+                f"AAA user_extended_info.master_number_generation_date: {user_extended_info.master_number_generation_date}")
+            riddle_man = random.choice(User.objects.all()) # TODO: exclude special users such as admin
             context['riddle_man'] = riddle_man
 
             all_hobbies = [ho for ho in Hobby.objects.all()]
